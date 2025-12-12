@@ -1,0 +1,17 @@
+log:
+  level: debug
+
+db:
+  mysql:
+    dsn: "root:123123@tcp(172.28.240.236:13316)/webook_db"
+  redis:
+    addr: "172.28.240.236:6379"
+
+kafka:
+  addrs:
+    - "localhost:9094"
+ 
+
+grpc:
+  addr: "localhost:8090"
+

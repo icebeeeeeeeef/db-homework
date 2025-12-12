@@ -1,0 +1,17 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: "webook/api/proto/gen" # 修正点 1: default 后面是冒号，表示一个键值对
+plugins:
+  - plugin: buf.build/protocolbuffers/go # 修正点 2: plugin: 后面需要一个空格
+    out: "api/proto/gen"
+    opt: # 修正点 3: opt 应该是一个列表
+      - paths=source_relative
+
+  - plugin: buf.build/grpc/go # 修正点 2: plugin: 后面需要一个空格
+    out: "api/proto/gen"
+    opt: # 修正点 3: opt 应该是一个列表
+      - paths=source_relative
+      # 如果你使用的是 gRPC-Go 插件，可能还需要这个选项来避免实现所有 RPC 方法
+      # - require_unimplemented_servers=false

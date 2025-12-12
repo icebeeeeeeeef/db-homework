@@ -1,0 +1,10 @@
+db:
+  mysql:
+    # 默认 MySQL 使用 docker-compose 启动，映射端口 13316 -> 3306
+    # root 密码在 docker-compose 中是 123123；如改用其他用户请同步修改
+    dsn: "root:123123@tcp(localhost:13316)/webook_db?parseTime=true&loc=Local&charset=utf8mb4"
+  redis:
+    addr: "localhost:6379"
+
+log:
+  level: "info"

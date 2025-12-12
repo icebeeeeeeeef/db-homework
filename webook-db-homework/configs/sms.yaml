@@ -1,0 +1,26 @@
+# 腾讯云短信服务配置
+tencent_sms:
+  # 腾讯云访问密钥
+  secret_id: "your_secret_id_here"
+  secret_key: "your_secret_key_here"
+  
+  # 地域配置
+  region: "ap-guangzhou"
+  
+  # 短信应用ID
+  app_id: "your_sms_app_id_here"
+  
+  # 短信签名
+  sign_name: "您的签名"
+  
+  # 短信模板ID
+  templates:
+    login: "your_login_template_id"
+    register: "your_register_template_id"
+    reset: "your_reset_template_id"
+
+# 环境变量配置（推荐使用环境变量）
+# export TENCENT_SMS_SECRET_ID="your_secret_id"
+# export TENCENT_SMS_SECRET_KEY="your_secret_key"
+# export TENCENT_SMS_APP_ID="your_app_id"
+# export TENCENT_SMS_SIGN_NAME="您的签名"

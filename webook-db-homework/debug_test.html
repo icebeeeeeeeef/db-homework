@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API调试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #51cf66;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 API调试页面</h1>
+    
+    <div class="container">
+        <h2>登录测试</h2>
+        <button onclick="testLogin()">测试登录</button>
+        <button onclick="testProfile()">测试Profile接口</button>
+        <button onclick="testCORS()">测试CORS</button>
+        <button onclick="clearLog()">清空日志</button>
+    </div>
+
+    <div class="container">
+        <h2>调试日志</h2>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function testLogin() {
+            log('开始测试登录...');
+            
+            try {
+                const response = await fetch('http://localhost:8080/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: '123456'
+                    }),
+                    credentials: 'include'
+                });
+
+                log(`响应状态: ${response.status}`);
+                log(`响应头: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`);
+                
+                const data = await response.json();
+                log(`响应数据: ${JSON.stringify(data)}`);
+                
+                if (response.ok) {
+                    log('登录成功！', 'success');
+                } else {
+                    log(`登录失败: ${data.message || data}`, 'error');
+                }
+            } catch (error) {
+                log(`请求失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProfile() {
+            log('开始测试Profile接口...');
+            
+            try {
+                const response = await fetch('http://localhost:8080/users/profile', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                log(`响应状态: ${response.status}`);
+                log(`响应头: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Profile数据: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    const data = await response.json();
+                    log(`Profile请求失败: ${data.error || data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Profile请求失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCORS() {
+            log('开始测试CORS...');
+            
+            try {
+                const response = await fetch('http://localhost:8080/users/profile', {
+                    method: 'OPTIONS',
+                    credentials: 'include'
+                });
+
+                log(`OPTIONS响应状态: ${response.status}`);
+                log(`CORS头: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`);
+                
+            } catch (error) {
+                log(`CORS测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 页面加载时显示当前域名
+        window.onload = function() {
+            log(`当前页面域名: ${window.location.origin}`);
+            log(`当前页面URL: ${window.location.href}`);
+        };
+    </script>
+</body>
+</html>
+
+
